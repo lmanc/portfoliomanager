@@ -17,6 +17,7 @@ import pandas as pd
 - Modify the rebalancing process to return the product name instead of the ISIN (or both).
 """
 
+
 class Portfolio:
     def __init__(
         self,
@@ -28,6 +29,12 @@ class Portfolio:
         self._al = Portfolio._read_allocation(allocation_file)
         self._currency = currency
 
+    def __str__(self):
+        return self.summary.to_string()
+    
+    def __repr__(self):
+        return f'Portfolio(currency={self.currency}, total_value={self.total_value})'
+    
     @property
     def currency(self) -> str:
         return self._currency
@@ -52,7 +59,9 @@ class Portfolio:
         )
 
         df = df.join(self._al)
-        df['Expected Value'] = (self.total_value / 100 * df['Expected Percentage']).round(2)
+        df['Expected Value'] = (
+            self.total_value / 100 * df['Expected Percentage']
+        ).round(2)
 
         return df[
             [
