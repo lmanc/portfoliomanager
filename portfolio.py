@@ -31,10 +31,10 @@ class Portfolio:
 
     def __str__(self):
         return self.summary.to_string()
-    
+
     def __repr__(self):
         return f'Portfolio(currency={self.currency}, total_value={self.total_value})'
-    
+
     @property
     def currency(self) -> str:
         return self._currency
