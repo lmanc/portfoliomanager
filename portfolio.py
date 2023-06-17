@@ -1,24 +1,21 @@
 import pandas as pd
 
-# TODO:
-# API to get daily closing value
-# Class architecture -
-# portfolio : init with portfolio.csv and assets.csv - takes care of validation and creating the portfolio object. Must have a currencty attr
-# portfolio manager: return views which are some columns of the portfolio and the movments - does not touch the portfolio object, but only read it.
-# print(e) should be logged instead
-# currency should support changes and a change in the "currency" property should impact the values inside the portfolio
+"""
+#TODO:
+- Implement a mechanism using some public API to retrieve print names and daily closing values for assets.
+- Improve logging by replacing print statements with appropriate logging functions.
+- Enhance the "currency" property to support changes and ensure that changing the currency property affects the values inside the portfolio.
+- Use Plotly to plot both Portfolio and PortfolioManager instances.
 
-# FIXME:
-# currency validator
-# when rebalancing there are certain scenarios to be considered:
-# - no_sell: all assets in the portfolio must be in assets.csv.
-#            assets.csv can have assets that are not in the portfolio.
-#
-# - sell: join must not discard rows that are not present in one of
-#         the two files since operations on all the assets has to be done.
-#         Fix `join` in `build_working_dataframe`.
-# rebalancing should return the product name instead of the ISIN
-
+#FIXME:
+- Refactor the class architecture for better organization and maintainability.
+- Write docstrings.
+- Unit test everything with pytest.
+- Address certain scenarios during rebalancing:
+    In the "no_sell" scenario, ensure that all assets in the portfolio are present in allocation.csv, while allowing assets in allocation.csv that are not in the portfolio.
+    In the "sell" scenario, fix the ".join()" operation in the build_working_dataframe function to avoid discarding rows that are not present in either of the two files.
+- Modify the rebalancing process to return the product name instead of the ISIN (or both).
+"""
 
 class Portfolio:
     def __init__(
@@ -46,6 +43,26 @@ class Portfolio:
         except KeyError as e:
             print(e)
             raise KeyError(e) from None
+
+    @property
+    def summary(self) -> pd.DataFrame:
+        df = self._pf.drop(['Amount', 'Closing', 'Local value'], axis=1)
+        df['Current Percentage'] = (df['Current Value'] / self.total_value * 100).apply(
+            lambda x: round(x, 2)
+        )
+
+        df = df.join(self._al)
+        df['Expected Value'] = (self.total_value / 100 * df['Expected Percentage']).round(2)
+
+        return df[
+            [
+                'Product',
+                'Current Value',
+                'Expected Value',
+                'Current Percentage',
+                'Expected Percentage',
+            ]
+        ]
 
     @staticmethod
     def _read_file(file: str):
