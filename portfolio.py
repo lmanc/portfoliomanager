@@ -8,13 +8,11 @@ import pandas as pd
 - Use Plotly to plot both Portfolio and PortfolioManager instances.
 
 #FIXME:
-- Refactor the class architecture for better organization and maintainability.
 - Write docstrings.
 - Unit test everything with pytest.
 - Address certain scenarios during rebalancing:
     In the "no_sell" scenario, ensure that all assets in the portfolio are present in allocation.csv, while allowing assets in allocation.csv that are not in the portfolio.
     In the "sell" scenario, fix the ".join()" operation in the build_working_dataframe function to avoid discarding rows that are not present in either of the two files.
-- Modify the rebalancing process to return the product name instead of the ISIN (or both).
 """
 
 
