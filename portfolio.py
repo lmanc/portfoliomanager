@@ -57,7 +57,7 @@ class Portfolio:
         ]
 
     @staticmethod
-    def _read_file(file: str):
+    def _read_file(file: str) -> pd.DataFrame:
         try:
             return pd.read_csv(file)
         except FileNotFoundError as e:
