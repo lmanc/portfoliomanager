@@ -3,6 +3,7 @@
 - Improve logging by replacing print statements in `except` blocks with appropriate logging functions.
 - Enhance the `currency` property to support changes and ensure that changing it affects the values inside the portfolio.
 - Use Plotly to plot both `Portfolio` and `PortfolioManager` instances.
+- Create `Portfolio`'s child class `DegiroPortfolio`.
 
 # FIXME
 - Write docstrings.
