@@ -36,7 +36,7 @@ class Portfolio:
 
     @property
     def summary(self) -> pd.DataFrame:
-        df = self._pf.drop(['Amount', 'Closing', 'Local value'], axis=1)
+        df = self._pf.drop(['Amount', 'Closing', 'Local Value'], axis=1)
         df['Current Percentage'] = (df['Current Value'] / self.total_value * 100).apply(
             lambda x: round(x, 2)
         )
@@ -79,7 +79,7 @@ class Portfolio:
                 'ISIN',
                 'Amount',
                 'Closing',
-                'Local value',
+                'Local Value',
                 'Current Value',
             ]
         except ValueError as e:
