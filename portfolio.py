@@ -86,17 +86,6 @@ class Portfolio:
             print(e)
             raise ValueError(e) from None
 
-        if df['Current Value'].dtype == 'object':
-            try:
-                df['Current Value'] = (
-                    df['Current Value']
-                    .apply(lambda x: x.replace(',', '.'))
-                    .astype('float')
-                )
-            except (KeyError, AttributeError, ValueError) as e:
-                print(e)
-                raise type(e)(e) from None
-
         try:
             df.dropna(subset=['ISIN'], inplace=True)
         except KeyError as e:
@@ -104,6 +93,19 @@ class Portfolio:
             raise KeyError(e) from None
 
         df.set_index('ISIN', inplace=True)
+
+        for col in ('Current Value', 'Closing'):
+            if all(isinstance(item, str) for item in df[col]):
+                try:
+                    df[col] = (
+                        df[col]
+                        .apply(lambda x: x.replace(',', '.'))
+                        .astype('float')
+                    )
+                except (KeyError, AttributeError, ValueError) as e:
+                    print(e)
+                    raise type(e)(e) from None
+
 
     @staticmethod
     def _read_allocation(allocation_file: str) -> pd.DataFrame:
