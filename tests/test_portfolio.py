@@ -20,6 +20,8 @@ allocations_plain = ('allocation_EUR.pickle', 'allocation_GBP.pickle')
 portfolios_columns = ('portfolio_EUR_columns.pickle', 'portfolio_GBP_columns.pickle')
 portfolios_dropna = ('portfolio_EUR_dropna.pickle', 'portfolio_GBP_dropna.pickle')
 portfolios_idx = ('portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle')
+
+# Not to be used yet - we need the Degiro conversion function defined.
 portfolios_conv = ('portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle')
 
 allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
@@ -53,10 +55,20 @@ def test_portfolio_init(raw_csv_portfolio, raw_csv_allocation, mocker):
 
 
 @pytest.mark.parametrize('currency', currencies)
-def test_portfolio_init_currency(currency):
+def test_currency(currency):
     mock_portfolio = MockPortfolio(currency=currency)
     assert mock_portfolio.currency == currency
 
+@pytest.mark.parametrize('read_pickles', [ *zip(portfolios_conv, allocations_idx) ], indirect=True)
+def test_summary(read_pickles, mocker):
+    portfolio, allocation = read_pickles
+    mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
+    mocker.patch.object(Portfolio, '_read_allocation', return_value=allocation)
+
+    mock_portfolio = MockPortfolio()
+
+    mock_portfolio.summary 
+    
 
 @pytest.mark.parametrize(
     'df_expected_from_pickle, raw_csv_portfolio',
