@@ -26,4 +26,3 @@ def df_expected_from_pickle(request):
 @pytest.fixture
 def df_working_from_pickle(request):
     return pd.read_pickle(project_dir / 'tests' / 'pickles' / request.param)
-

@@ -2,7 +2,6 @@ import pandas as pd
 
 
 class Portfolio:
-
     def __init__(
         self,
         portfolio_file: str = 'portfolio.csv',
@@ -61,7 +60,9 @@ class Portfolio:
         df = Portfolio._read_file(allocation_file)
 
         if not Portfolio._validate_allocation_percentage_sum(df):
-            raise ValueError(f'The total sum of percentages in the "Expected Percentage" column is not 100%')
+            raise ValueError(
+                f'The total sum of percentages in the "Expected Percentage" column is not 100%'
+            )
 
         df = Portfolio._set_index_isin(df)
         return df

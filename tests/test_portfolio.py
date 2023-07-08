@@ -4,10 +4,11 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from portfolio import Portfolio
+
 project_dir = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_dir))
 
-from portfolio import Portfolio
 
 currencies = ('EUR', 'GBP')
 portfolios_csv = ('portfolio_EUR.csv', 'portfolio_GBP.csv')
@@ -25,26 +26,31 @@ allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
 
 
 class MockPortfolio(Portfolio):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
         pass
 
 
-@pytest.mark.parametrize('raw_csv_portfolio, raw_csv_allocation', zip(portfolios_csv, allocations_csv), indirect=True)
+@pytest.mark.parametrize(
+    'raw_csv_portfolio, raw_csv_allocation',
+    zip(portfolios_csv, allocations_csv),
+    indirect=True,
+)
 def test_portfolio_init(raw_csv_portfolio, raw_csv_allocation, mocker):
     read_portfolio_spy = mocker.spy(MockPortfolio, '_read_portfolio')
     allocation_portfolio_spy = mocker.spy(MockPortfolio, '_read_allocation')
 
-    mock_portfolio = MockPortfolio(portfolio_file=raw_csv_portfolio, allocation_file=raw_csv_allocation)
+    mock_portfolio = MockPortfolio(
+        portfolio_file=raw_csv_portfolio, allocation_file=raw_csv_allocation
+    )
 
     assert read_portfolio_spy.call_count == 1
     assert allocation_portfolio_spy.call_count == 1
     assert mock_portfolio.currency == 'EUR'
+
 
 @pytest.mark.parametrize('currency', currencies)
 def test_portfolio_init_currency(currency):
