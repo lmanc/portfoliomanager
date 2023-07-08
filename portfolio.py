@@ -9,8 +9,8 @@ class Portfolio:
         allocation_file: str = 'allocation.csv',
         currency: str = 'EUR',
     ):
-        self._pf = Portfolio._read_portfolio(portfolio_file)
-        self._al = Portfolio._read_allocation(allocation_file)
+        self._pf = self.__class__._read_portfolio(portfolio_file)
+        self._al = self.__class__._read_allocation(allocation_file)
         self._currency = currency
 
     @property
