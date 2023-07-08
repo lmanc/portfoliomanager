@@ -9,43 +9,47 @@ sys.path.append(str(project_dir))
 
 from portfolio import Portfolio
 
-portfolios_csv = ['portfolio_EUR.csv', 'portfolio_GBP.csv']
-allocations_csv = ['allocation_EUR.csv', 'allocation_GBP.csv']
+currencies = ('EUR', 'GBP')
+portfolios_csv = ('portfolio_EUR.csv', 'portfolio_GBP.csv')
+allocations_csv = ('allocation_EUR.csv', 'allocation_GBP.csv')
 
-portfolios_plain = ['portfolio_EUR.pickle', 'portfolio_GBP.pickle']
-allocations_plain = ['allocation_EUR.pickle', 'allocation_GBP.pickle']
+portfolios_plain = ('portfolio_EUR.pickle', 'portfolio_GBP.pickle')
+allocations_plain = ('allocation_EUR.pickle', 'allocation_GBP.pickle')
 
-portfolios_columns = ['portfolio_EUR_columns.pickle', 'portfolio_GBP_columns.pickle']
-portfolios_dropna = ['portfolio_EUR_dropna.pickle', 'portfolio_GBP_dropna.pickle']
-portfolios_idx = ['portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle']
-portfolios_conv = ['portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle']
+portfolios_columns = ('portfolio_EUR_columns.pickle', 'portfolio_GBP_columns.pickle')
+portfolios_dropna = ('portfolio_EUR_dropna.pickle', 'portfolio_GBP_dropna.pickle')
+portfolios_idx = ('portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle')
+portfolios_conv = ('portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle')
 
-allocations_idx = ['allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle']
+allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
+
 
 class MockPortfolio(Portfolio):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
         pass
 
 
-@pytest.fixture
-def raw_csv_portfolio(request):
-    return project_dir / 'tests' / 'csv' / request.param
+@pytest.mark.parametrize('raw_csv_portfolio, raw_csv_allocation', zip(portfolios_csv, allocations_csv), indirect=True)
+def test_portfolio_init(raw_csv_portfolio, raw_csv_allocation, mocker):
+    read_portfolio_spy = mocker.spy(MockPortfolio, '_read_portfolio')
+    allocation_portfolio_spy = mocker.spy(MockPortfolio, '_read_allocation')
 
+    mock_portfolio = MockPortfolio(portfolio_file=raw_csv_portfolio, allocation_file=raw_csv_allocation)
 
-@pytest.fixture
-def raw_csv_allocation(request):
-    return project_dir / 'tests' / 'csv' / request.param
+    assert read_portfolio_spy.call_count == 1
+    assert allocation_portfolio_spy.call_count == 1
+    assert mock_portfolio.currency == 'EUR'
 
-
-@pytest.fixture
-def df_expected_from_pickle(request):
-    return pd.read_pickle(project_dir / 'tests' / 'pickles' / request.param)
-
-
-@pytest.fixture
-def df_working_from_pickle(request):
-    return pd.read_pickle(project_dir / 'tests' / 'pickles' / request.param)
+@pytest.mark.parametrize('currency', currencies)
+def test_portfolio_init_currency(currency):
+    mock_portfolio = MockPortfolio(currency=currency)
+    assert mock_portfolio.currency == currency
 
 
 @pytest.mark.parametrize(
