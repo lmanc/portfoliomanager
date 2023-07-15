@@ -21,10 +21,10 @@ portfolios_columns = ('portfolio_EUR_columns.pickle', 'portfolio_GBP_columns.pic
 portfolios_dropna = ('portfolio_EUR_dropna.pickle', 'portfolio_GBP_dropna.pickle')
 portfolios_idx = ('portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle')
 
-# Not to be used yet - we need the DegiroPortfolio conversion function defined.
 portfolios_conv = ('portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle')
-
 allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
+
+summaries = ('summary_EUR.pickle', 'summary_GBP.pickle')
 
 
 class MockPortfolio(Portfolio):
@@ -60,15 +60,32 @@ def test_currency(currency):
     assert mock_portfolio.currency == currency
 
 
-# @pytest.mark.parametrize('read_pickles', [ *zip(portfolios_conv, allocations_idx) ], indirect=True)
-# def test_summary(read_pickles, mocker):
-#    portfolio, allocation = read_pickles
-#    mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
-#    mocker.patch.object(Portfolio, '_read_allocation', return_value=allocation)
-#
-#    mock_portfolio = MockPortfolio()
-#
-#    mock_portfolio.summary
+@pytest.mark.parametrize('read_pickles', zip(portfolios_conv), indirect=True)
+def test_total_value(read_pickles, mocker):
+    (df_expected_from_pickle,) = read_pickles
+    mocker.patch.object(
+        Portfolio, '_read_portfolio', return_value=df_expected_from_pickle
+    )
+
+    mock_portfolio = MockPortfolio()
+
+    assert mock_portfolio.total_value == df_expected_from_pickle['Current Value'].sum()
+
+
+@pytest.mark.parametrize(
+    'read_pickles', zip(portfolios_conv, allocations_idx, summaries), indirect=True
+)
+def test_summary(read_pickles, mocker):
+    portfolio, allocation, df_expected_from_pickle = read_pickles
+
+    portfolio.rename(index={portfolio.index[0]: 'US0003692039'}, inplace=True)
+
+    mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
+    mocker.patch.object(Portfolio, '_read_allocation', return_value=allocation)
+
+    mock_portfolio = MockPortfolio()
+
+    assert mock_portfolio.summary.equals(df_expected_from_pickle)
 
 
 @pytest.mark.parametrize(

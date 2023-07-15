@@ -16,6 +16,33 @@ class Portfolio:
     def currency(self) -> str:
         return self._currency
 
+    @property
+    def total_value(self) -> float:
+        return self._pf['Current Value'].sum()
+
+    @property
+    def summary(self) -> pd.DataFrame:
+        df = self._pf.drop(['Amount', 'Closing', 'Local Value'], axis=1)
+        df = df.merge(self._al, how='outer', left_index=True, right_index=True)
+        df.fillna({'Current Value': 0, 'Expected Percentage': 0}, inplace=True)
+        df['Current Percentage'] = (df['Current Value'] / self.total_value * 100).apply(
+            lambda x: round(x, 2)
+        )
+
+        df['Expected Value'] = (
+            self.total_value / 100 * df['Expected Percentage']
+        ).round(2)
+
+        return df[
+            [
+                'Product',
+                'Current Value',
+                'Expected Value',
+                'Current Percentage',
+                'Expected Percentage',
+            ]
+        ]
+
     @staticmethod
     def _read_file(file: str) -> pd.DataFrame:
         try:
