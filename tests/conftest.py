@@ -19,16 +19,8 @@ def raw_csv_allocation(request):
 
 
 @pytest.fixture
-def df_expected_from_pickle(request):
-    return pd.read_pickle(project_dir / 'tests' / 'pickles' / request.param)
-
-
-@pytest.fixture
-def df_working_from_pickle(request):
-    return pd.read_pickle(project_dir / 'tests' / 'pickles' / request.param)
-
-
-@pytest.fixture
 def read_pickles(request):
-    return ( pd.read_pickle(project_dir / 'tests' / 'pickles' / path) for path in request.param )
-    
+    return (
+        pd.read_pickle(project_dir / 'tests' / 'pickles' / path)
+        for path in request.param
+    )
