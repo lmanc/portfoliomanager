@@ -3,42 +3,26 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+from conftest import MockPortfolio
 
 from portfolio import Portfolio
 
 project_dir = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_dir))
 
-
-currencies = ('EUR', 'GBP')
-portfolios_csv = ('portfolio_EUR.csv', 'portfolio_GBP.csv')
-allocations_csv = ('allocation_EUR.csv', 'allocation_GBP.csv')
-
-portfolios_plain = ('portfolio_EUR.pickle', 'portfolio_GBP.pickle')
-allocations_plain = ('allocation_EUR.pickle', 'allocation_GBP.pickle')
-
-portfolios_columns = ('portfolio_EUR_columns.pickle', 'portfolio_GBP_columns.pickle')
-portfolios_dropna = ('portfolio_EUR_dropna.pickle', 'portfolio_GBP_dropna.pickle')
-portfolios_idx = ('portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle')
-
-portfolios_conv = ('portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle')
-allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
-
-summaries = ('summary_EUR.pickle', 'summary_GBP.pickle')
-rebalances_sell = ('rebalance_sell_EUR.pickle', 'rebalance_sell_GBP.pickle')
-summaries_passing_no_sell = (
-    'summary_EUR_passing_no_sell.pickle',
-    'summary_GBP_passing_no_sell.pickle',
+from conftest import (
+    allocations_csv,
+    allocations_idx,
+    allocations_plain,
+    currencies,
+    portfolios_columns,
+    portfolios_conv,
+    portfolios_csv,
+    portfolios_dropna,
+    portfolios_idx,
+    portfolios_plain,
+    summaries,
 )
-
-
-class MockPortfolio(Portfolio):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    @staticmethod
-    def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
-        pass
 
 
 @pytest.mark.parametrize(
@@ -74,11 +58,16 @@ def test_total_value(read_pickles, mocker):
 
     mock_portfolio = MockPortfolio()
 
-    assert mock_portfolio.total_value == df_expected_from_pickle['Current Value'].sum()
+    assert (
+        mock_portfolio.total_value
+        == df_expected_from_pickle['Current Value'].sum()
+    )
 
 
 @pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_conv, allocations_idx, summaries), indirect=True
+    'read_pickles',
+    zip(portfolios_conv, allocations_idx, summaries),
+    indirect=True,
 )
 def test_summary(read_pickles, mocker):
     portfolio, allocation, df_expected_from_pickle = read_pickles
@@ -156,7 +145,9 @@ def test_set_index_isin(read_pickles):
 
 
 @pytest.mark.parametrize('read_pickles', zip(portfolios_idx), indirect=True)
-def test_convert_str_columns_to_float_raise_NotImplementedError(read_pickles):
+def test_convert_str_columns_to_float_raise_NotImplementedError(
+    read_pickles,
+):
     (df_working_from_pickle,) = read_pickles
     with pytest.raises(NotImplementedError):
         Portfolio._convert_str_columns_to_float(df_working_from_pickle)
@@ -183,14 +174,18 @@ def test_read_portfolio(raw_csv_portfolio, mocker):
 @pytest.mark.parametrize('read_pickles', zip(allocations_plain), indirect=True)
 def test_validate_allocation_percentage_sum(read_pickles):
     (df_expected_from_pickle,) = read_pickles
-    assert Portfolio._validate_allocation_percentage_sum(df_expected_from_pickle)
+    assert Portfolio._validate_allocation_percentage_sum(
+        df_expected_from_pickle
+    )
 
 
 @pytest.mark.parametrize('read_pickles', zip(allocations_plain), indirect=True)
 def test_validate_allocation_percentage_sum_wrong(read_pickles):
     (df_expected_from_pickle,) = read_pickles
     df_expected_from_pickle['Expected Percentage'] = 0
-    assert not Portfolio._validate_allocation_percentage_sum(df_expected_from_pickle)
+    assert not Portfolio._validate_allocation_percentage_sum(
+        df_expected_from_pickle
+    )
 
 
 @pytest.mark.parametrize('raw_csv_allocation', allocations_csv, indirect=True)
@@ -213,32 +208,3 @@ def test_read_allocation(read_pickles, raw_csv_allocation):
     assert df_expected_from_pickle.equals(
         Portfolio._read_allocation(raw_csv_allocation)
     )
-
-
-@pytest.mark.parametrize(
-    'read_pickles', zip(rebalances_sell, portfolios_conv, summaries), indirect=True
-)
-def test_rebalance_sell(read_pickles, mocker):
-    rebalance_sell, portfolio, summary = read_pickles
-    mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
-    mocker.patch.object(Portfolio, 'summary', return_value=summary)
-
-    mock_portfolio = MockPortfolio()
-
-    assert mock_portfolio.rebalance_sell().equals(rebalance_sell)
-
-
-@pytest.mark.parametrize('read_pickles', zip(summaries), indirect=True)
-def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
-    (summary_file,) = read_pickles
-
-    mocker.patch.object(
-        Portfolio,
-        'summary',
-        new_callable=mocker.PropertyMock,
-        return_value=summary_file,
-    )
-    mock_portfolio = MockPortfolio()
-
-    with pytest.raises(ValueError):
-        mock_portfolio.rebalance_no_sell()

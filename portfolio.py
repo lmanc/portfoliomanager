@@ -25,9 +25,9 @@ class Portfolio:
         df = self._pf.drop(['Amount', 'Closing', 'Local Value'], axis=1)
         df = df.merge(self._al, how='outer', left_index=True, right_index=True)
         df.fillna({'Current Value': 0, 'Expected Percentage': 0}, inplace=True)
-        df['Current Percentage'] = (df['Current Value'] / self.total_value * 100).apply(
-            lambda x: round(x, 2)
-        )
+        df['Current Percentage'] = (
+            df['Current Value'] / self.total_value * 100
+        ).apply(lambda x: round(x, 2))
 
         return df[
             [
@@ -88,37 +88,3 @@ class Portfolio:
 
         df = Portfolio._set_index_isin(df)
         return df
-
-    def rebalance_sell(self) -> pd.DataFrame:
-        df = self.summary
-        df['Expected Value'] = (
-            self.total_value / 100 * df['Expected Percentage']
-        ).round(2)
-
-        df['Movement'] = df['Expected Value'] - df['Current Value']
-        return df[
-            [
-                'Product',
-                'Current Value',
-                'Expected Value',
-                'Current Percentage',
-                'Expected Percentage',
-                'Movment',
-            ]
-        ]
-
-    def rebalance_no_sell(self) -> pd.DataFrame:
-        df = self.summary
-        mask = (df['Expected Percentage'] == 0) & (df['Current Value'] != 0)
-
-        if mask.any():
-            error_message = (
-                "While performing a no-sell rebalance, you can't set an"
-                "Expected Percentage of 0% in your desired allocation for an"
-                "asset that you currently own. The following assets are"
-                "currently owned but their Expected Percentage is 0%:\n\n"
-                f"{df[mask][['Product', 'Current Value', 'Expected Percentage']]}"
-                "\n\nPlease adjust your target allocations and try again."
-            )
-
-            raise ValueError(error_message)
