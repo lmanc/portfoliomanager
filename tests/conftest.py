@@ -35,6 +35,10 @@ summaries_passing_no_sell = (
     'summary_EUR_passing_no_sell.pickle',
     'summary_GBP_passing_no_sell.pickle',
 )
+rebalances_no_sell = (
+    'rebalance_no_sell_EUR.pickle',
+    'rebalance_no_sell_GBP.pickle',
+)
 
 
 class MockPortfolio(Portfolio):

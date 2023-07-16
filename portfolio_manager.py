@@ -7,36 +7,6 @@ class PortfolioManager:
     def __init__(self, portfolio: Portfolio):
         self._portfolio = portfolio
 
-    # def rebalance_sell(self) -> pd.DataFrame:
-    #     movement = (
-    #         self._portfolio.summary['Expected Value']
-    #         - self._portfolio.summary['Current Value']
-    #     ).round(2)
-    #     return pd.DataFrame(
-    #         {
-    #             'Product': self._portfolio.summary['Product'],
-    #             'Movment': movement,
-    #         }
-    #     )
-
-    # def rebalance_no_sell(self) -> pd.DataFrame:
-    #     summary = self._portfolio.summary
-    #     max_isin = (
-    #         summary['Current Percentage'] / summary['Expected Percentage']
-    #     ).idxmax()
-
-    #     movement = (
-    #         summary['Expected Percentage']
-    #         * (
-    #             summary.loc[max_isin]['Current Value']
-    #             / summary.loc[max_isin]['Expected Percentage']
-    #         )
-    #     ).round(2) - summary['Current Value']
-
-    #     return pd.DataFrame(
-    #         {'Product': summary['Product'], 'Movement': movement}
-    #     )
-
     def rebalance_sell(self) -> pd.DataFrame:
         df = self._portfolio.summary
         df['Expected Value'] = (
@@ -70,3 +40,25 @@ class PortfolioManager:
             )
 
             raise ValueError(error_message)
+
+        max_isin = (
+            df['Current Percentage'] / df['Expected Percentage']
+        ).idxmax()
+
+        df['Expected Value'] = df['Expected Percentage'] * (
+            df.loc[max_isin]['Current Value']
+            / df.loc[max_isin]['Expected Percentage']
+        ).round(2)
+
+        df['Movement'] = df['Expected Value'] - df['Current Value']
+
+        return df[
+            [
+                'Product',
+                'Current Value',
+                'Expected Value',
+                'Current Percentage',
+                'Expected Percentage',
+                'Movement',
+            ]
+        ]
