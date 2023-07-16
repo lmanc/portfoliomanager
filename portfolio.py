@@ -108,8 +108,17 @@ class Portfolio:
         ]
 
     def rebalance_no_sell(self) -> pd.DataFrame:
-        if (
-            (self.summary['Expected Percentage'] == 0)
-            & (self.summary['Current Percentage'] != 0)
-        ).any():
-            raise ValueError('')
+        df = self.summary
+        mask = (df['Expected Percentage'] == 0) & (df['Current Value'] != 0)
+
+        if mask.any():
+            error_message = (
+                "While performing a no-sell rebalance, you can't set an"
+                "Expected Percentage of 0% in your desired allocation for an"
+                "asset that you currently own. The following assets are"
+                "currently owned but their Expected Percentage is 0%:\n\n"
+                f"{df[mask][['Product', 'Current Value', 'Expected Percentage']]}"
+                "\n\nPlease adjust your target allocations and try again."
+            )
+
+            raise ValueError(error_message)

@@ -26,6 +26,10 @@ allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
 
 summaries = ('summary_EUR.pickle', 'summary_GBP.pickle')
 rebalances_sell = ('rebalance_sell_EUR.pickle', 'rebalance_sell_GBP.pickle')
+summaries_passing_no_sell = (
+    'summary_EUR_passing_no_sell.pickle',
+    'summary_GBP_passing_no_sell.pickle',
+)
 
 
 class MockPortfolio(Portfolio):
