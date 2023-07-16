@@ -222,3 +222,13 @@ def test_rebalance_sell(read_pickles, mocker):
     mock_portfolio = MockPortfolio()
 
     assert mock_portfolio.rebalance_sell().equals(rebalance_sell)
+
+@pytest.mark.parametrize('read_pickles', zip(summaries), indirect=True)
+def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
+    summary_file, = read_pickles
+
+    mocker.patch.object(Portfolio, 'summary', new_callable=mocker.PropertyMock, return_value=summary_file)
+    mock_portfolio = MockPortfolio()
+
+    with pytest.raises(ValueError):
+        mock_portfolio.rebalance_no_sell()

@@ -106,3 +106,10 @@ class Portfolio:
                 'Movment',
             ]
         ]
+
+    def rebalance_no_sell(self) -> pd.DataFrame:
+        if (
+            (self.summary['Expected Percentage'] == 0)
+            & (self.summary['Current Percentage'] != 0)
+        ).any():
+            raise ValueError('')
