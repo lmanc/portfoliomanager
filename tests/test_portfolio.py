@@ -27,6 +27,7 @@ allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
 summaries = ('summary_EUR.pickle', 'summary_GBP.pickle')
 rebalances_sell = ('rebalance_sell_EUR.pickle', 'rebalance_sell_GBP.pickle')
 
+
 class MockPortfolio(Portfolio):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -210,7 +211,9 @@ def test_read_allocation(read_pickles, raw_csv_allocation):
     )
 
 
-@pytest.mark.parametrize('read_pickles', zip(rebalances_sell, portfolios_conv, summaries), indirect=True)
+@pytest.mark.parametrize(
+    'read_pickles', zip(rebalances_sell, portfolios_conv, summaries), indirect=True
+)
 def test_rebalance_sell(read_pickles, mocker):
     rebalance_sell, portfolio, summary = read_pickles
     mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
@@ -219,4 +222,3 @@ def test_rebalance_sell(read_pickles, mocker):
     mock_portfolio = MockPortfolio()
 
     assert mock_portfolio.rebalance_sell().equals(rebalance_sell)
-

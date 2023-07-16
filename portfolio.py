@@ -91,7 +91,18 @@ class Portfolio:
 
     def rebalance_sell(self) -> pd.DataFrame:
         df = self.summary
-        df['Expected Value'] = (self.total_value / 100 * df['Expected Percentage']).round(2)
+        df['Expected Value'] = (
+            self.total_value / 100 * df['Expected Percentage']
+        ).round(2)
 
         df['Movement'] = df['Expected Value'] - df['Current Value']
-        return df[['Product', 'Current Value', 'Expected Value', 'Current Percentage', 'Expected Percentage', 'Movment']]
+        return df[
+            [
+                'Product',
+                'Current Value',
+                'Expected Value',
+                'Current Percentage',
+                'Expected Percentage',
+                'Movment',
+            ]
+        ]
