@@ -12,3 +12,5 @@
 - At this point, `Portfolio` should probably be an abstract class
 - All the imports need a proper refactor
 - Write `requirements.txt`
+- Set up proper GitHub Actions
+- Use `ruff` for linting
