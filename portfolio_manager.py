@@ -45,8 +45,9 @@ class PortfolioManager:
             df['Current Percentage'] / df['Expected Percentage']
         ).idxmax()
 
-        df['Expected Value'] = df['Expected Percentage'] * (
-            df.loc[max_isin]['Current Value']
+        df['Expected Value'] = (
+            df['Expected Percentage']
+            * df.loc[max_isin]['Current Value']
             / df.loc[max_isin]['Expected Percentage']
         ).round(2)
 
