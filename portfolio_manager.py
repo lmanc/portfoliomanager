@@ -4,10 +4,29 @@ from portfolio import Portfolio
 
 
 class PortfolioManager:
+    """
+    A class to manage a financial portfolio.
+
+    Attributes:
+        _portfolio (Portfolio): The portfolio to manage.
+    """
+
     def __init__(self, portfolio: Portfolio):
+        """
+        Constructs all the necessary attributes for the portfolio manager object.
+
+        Args:
+            portfolio (Portfolio): The portfolio to manage.
+        """
         self._portfolio = portfolio
 
     def rebalance_sell(self) -> pd.DataFrame:
+        """
+        Calculates the required changes to rebalance the portfolio with selling allowed.
+
+        Returns:
+            DataFrame: A DataFrame showing the current and expected values, percentages, and movements.
+        """
         df = self._portfolio.summary
         df['Expected Value'] = (
             self._portfolio.total_value / 100 * df['Expected Percentage']
@@ -26,6 +45,17 @@ class PortfolioManager:
         ]
 
     def rebalance_no_sell(self) -> pd.DataFrame:
+        """
+        Calculates the required changes to rebalance the portfolio without selling.
+
+        If an asset is owned but its expected percentage is 0, an error is raised.
+
+        Raises:
+            ValueError: If an asset is owned but its expected percentage is 0.
+
+        Returns:
+            DataFrame: A DataFrame showing the current and expected values, percentages, and movements.
+        """
         df = self._portfolio.summary
         mask = (df['Expected Percentage'] == 0) & (df['Current Value'] != 0)
 

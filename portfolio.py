@@ -2,26 +2,50 @@ import pandas as pd
 
 
 class Portfolio:
+    """
+    A class to represent a financial portfolio.
+
+    Attributes:
+        _pf (DataFrame): A DataFrame containing portfolio data.
+        _al (DataFrame): A DataFrame containing allocation data.
+        _currency (str): The currency of the portfolio.
+    """
+
     def __init__(
         self,
         portfolio_file: str = 'portfolio.csv',
         allocation_file: str = 'allocation.csv',
         currency: str = 'EUR',
     ):
+        """
+        Constructs all the necessary attributes for the portfolio object.
+
+        Args:
+            portfolio_file (str): The file name of the portfolio csv. Defaults to 'portfolio.csv'.
+            allocation_file (str): The file name of the allocation csv. Defaults to 'allocation.csv'.
+            currency (str): The currency of the portfolio. Defaults to 'EUR'.
+        """
         self._pf = self.__class__._read_portfolio(portfolio_file)
         self._al = self.__class__._read_allocation(allocation_file)
         self._currency = currency
 
     @property
     def currency(self) -> str:
+        """Returns the currency of the portfolio."""
         return self._currency
 
     @property
     def total_value(self) -> float:
+        """Calculates and returns the total value of the portfolio."""
         return self._pf['Current Value'].sum()
 
     @property
     def summary(self) -> pd.DataFrame:
+        """
+        Generates and returns a summary of the portfolio.
+
+        The summary includes the product, current value, current percentage, and expected percentage.
+        """
         df = self._pf.drop(['Amount', 'Closing', 'Local Value'], axis=1)
         df = df.merge(self._al, how='outer', left_index=True, right_index=True)
         df.fillna({'Current Value': 0, 'Expected Percentage': 0}, inplace=True)
@@ -40,6 +64,18 @@ class Portfolio:
 
     @staticmethod
     def _read_file(file: str) -> pd.DataFrame:
+        """
+        Reads a csv file and returns a DataFrame.
+
+        Args:
+            file (str): The file name of the csv.
+
+        Raises:
+            FileNotFoundError: If the file does not exist.
+
+        Returns:
+            DataFrame: The DataFrame constructed from the csv file.
+        """
         try:
             return pd.read_csv(file)
         except FileNotFoundError as e:
@@ -48,26 +84,71 @@ class Portfolio:
 
     @staticmethod
     def _replace_columns(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Placeholder for a method that replaces column names in a DataFrame.
+
+        Raises:
+            NotImplementedError: This method needs to be implemented in a subclass.
+        """
         raise NotImplementedError
 
     @staticmethod
     def _dropna_isin(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Drops NaN values from the 'ISIN' column in a DataFrame.
+
+        Args:
+            df (DataFrame): The DataFrame to process.
+
+        Returns:
+            DataFrame: The processed DataFrame.
+        """
         return df.dropna(subset=['ISIN'])
 
     @staticmethod
     def _set_index_isin(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Sets the 'ISIN' column as the index of a DataFrame.
+
+        Args:
+            df (DataFrame): The DataFrame to process.
+
+        Returns:
+            DataFrame: The processed DataFrame.
+        """
         return df.set_index('ISIN')
 
     @staticmethod
     def _convert_str_columns_to_float(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Placeholder for a method that converts string columns to float in a DataFrame.
+
+        Raises:
+            NotImplementedError: This method needs to be implemented in a subclass.
+        """
         raise NotImplementedError
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Placeholder for a method that cleans a portfolio DataFrame.
+
+        Raises:
+            NotImplementedError: This method needs to be implemented in a subclass.
+        """
         raise NotImplementedError
 
     @classmethod
     def _read_portfolio(cls, portfolio_file: str) -> pd.DataFrame:
+        """
+        Reads a portfolio file and cleans the resulting DataFrame.
+
+        Args:
+            portfolio_file (str): The file name of the portfolio csv.
+
+        Returns:
+            DataFrame: The cleaned portfolio DataFrame.
+        """
         df = Portfolio._read_file(portfolio_file)
         df = cls._clean_portfolio(df)
 
@@ -75,10 +156,31 @@ class Portfolio:
 
     @staticmethod
     def _validate_allocation_percentage_sum(df: pd.DataFrame) -> bool:
+        """
+        Validates that the sum of the 'Expected Percentage' column in a DataFrame is 100.
+
+        Args:
+            df (DataFrame): The DataFrame to validate.
+
+        Returns:
+            bool: True if the sum is 100, False otherwise.
+        """
         return df['Expected Percentage'].sum() == 100
 
     @staticmethod
     def _read_allocation(allocation_file: str) -> pd.DataFrame:
+        """
+        Reads an allocation file and validates the resulting DataFrame.
+
+        Args:
+            allocation_file (str): The file name of the allocation csv.
+
+        Raises:
+            ValueError: If the sum of the 'Expected Percentage' column is not 100.
+
+        Returns:
+            DataFrame: The validated allocation DataFrame.
+        """
         df = Portfolio._read_file(allocation_file)
 
         if not Portfolio._validate_allocation_percentage_sum(df):
