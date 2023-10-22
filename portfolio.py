@@ -25,7 +25,7 @@ class Portfolio:
             allocation_file (str): The file name of the allocation csv. Defaults to 'allocation.csv'.
             currency (str): The currency of the portfolio. Defaults to 'EUR'.
         """
-        self._pf = self.__class__._read_portfolio(portfolio_file)
+        self._as = self.__class__._read_portfolio(portfolio_file)
         self._al = self.__class__._read_allocation(allocation_file)
         self._currency = currency
 
@@ -37,7 +37,7 @@ class Portfolio:
     @property
     def total_value(self) -> float:
         """Calculates and returns the total value of the portfolio."""
-        return self._pf['Current Value'].sum()
+        return self._as['Current Value'].sum()
 
     @property
     def summary(self) -> pd.DataFrame:
@@ -46,7 +46,7 @@ class Portfolio:
 
         The summary includes the product, current value, current percentage, and expected percentage.
         """
-        df = self._pf.drop(['Amount', 'Closing', 'Local Value'], axis=1)
+        df = self._as.drop(['Amount', 'Closing', 'Local Value'], axis=1)
         df = df.merge(self._al, how='outer', left_index=True, right_index=True)
         df.fillna({'Current Value': 0, 'Expected Percentage': 0}, inplace=True)
         df['Current Percentage'] = (
