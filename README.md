@@ -28,7 +28,7 @@ pm = PortfolioManager(pf)
 
 ## Sell Rebalance
 
-In order to perform a sell rebalance, simply run:
+In order to perform a sell rebalance, run:
 
 ```python
 from degiroportfolio import DegiroPortfolio
@@ -42,7 +42,7 @@ pm.rebalance_sell()
 
 ## No-sell Rebalance
 
-In order to perform a sell rebalance, simply run:
+In order to perform a no-sell rebalance, run:
 ```python
 from degiroportfolio import DegiroPortfolio
 from portfolio_manager import PortfolioManager
