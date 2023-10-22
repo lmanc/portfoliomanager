@@ -42,7 +42,12 @@ rebalances_no_sell = (
 
 
 class MockPortfolio(Portfolio):
-    def __init__(self, assets_file='csv/assets_EUR.csv', allocation_file='csv/allocation_EUR.csv', currency='EUR'):
+    def __init__(
+        self,
+        assets_file=project_dir / 'tests' / 'csv' / 'assets_EUR.csv',
+        allocation_file=project_dir / 'tests' / 'csv' / 'allocation_EUR.csv',
+        currency='EUR',
+    ):
         super().__init__(assets_file, allocation_file, currency)
 
     @staticmethod
