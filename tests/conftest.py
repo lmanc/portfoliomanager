@@ -11,23 +11,23 @@ import pytest
 from portfolio import Portfolio
 
 currencies = ('EUR', 'GBP')
-portfolios_csv = ('portfolio_EUR.csv', 'portfolio_GBP.csv')
+portfolios_csv = ('assets_EUR.csv', 'assets_GBP.csv')
 allocations_csv = ('allocation_EUR.csv', 'allocation_GBP.csv')
 
-portfolios_plain = ('portfolio_EUR.pickle', 'portfolio_GBP.pickle')
+portfolios_plain = ('assets_EUR.pickle', 'assets_GBP.pickle')
 allocations_plain = ('allocation_EUR.pickle', 'allocation_GBP.pickle')
 
 portfolios_columns = (
-    'portfolio_EUR_columns.pickle',
-    'portfolio_GBP_columns.pickle',
+    'assets_EUR_columns.pickle',
+    'assets_GBP_columns.pickle',
 )
 portfolios_dropna = (
-    'portfolio_EUR_dropna.pickle',
-    'portfolio_GBP_dropna.pickle',
+    'assets_EUR_dropna.pickle',
+    'assets_GBP_dropna.pickle',
 )
-portfolios_idx = ('portfolio_EUR_idx.pickle', 'portfolio_GBP_idx.pickle')
+portfolios_idx = ('assets_EUR_idx.pickle', 'assets_GBP_idx.pickle')
 
-portfolios_conv = ('portfolio_EUR_conv.pickle', 'portfolio_GBP_conv.pickle')
+portfolios_conv = ('assets_EUR_conv.pickle', 'assets_GBP_conv.pickle')
 allocations_idx = ('allocation_EUR_idx.pickle', 'allocation_GBP_idx.pickle')
 summaries = ('summary_EUR.pickle', 'summary_GBP.pickle')
 rebalances_sell = ('rebalance_sell_EUR.pickle', 'rebalance_sell_GBP.pickle')
@@ -42,8 +42,8 @@ rebalances_no_sell = (
 
 
 class MockPortfolio(Portfolio):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, assets_file='csv/assets_EUR.csv', allocation_file='csv/allocation_EUR.csv', currency='EUR'):
+        super().__init__(assets_file, allocation_file, currency)
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
