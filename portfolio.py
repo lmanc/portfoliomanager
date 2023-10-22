@@ -13,7 +13,7 @@ class Portfolio:
 
     def __init__(
         self,
-        portfolio_file: str = 'portfolio.csv',
+        assets_file: str = 'assets.csv',
         allocation_file: str = 'allocation.csv',
         currency: str = 'EUR',
     ):
@@ -21,11 +21,11 @@ class Portfolio:
         Constructs all the necessary attributes for the portfolio object.
 
         Args:
-            portfolio_file (str): The file name of the portfolio csv. Defaults to 'portfolio.csv'.
+            assets_file (str): The file name of the assets csv. Defaults to 'assets.csv'.
             allocation_file (str): The file name of the allocation csv. Defaults to 'allocation.csv'.
             currency (str): The currency of the portfolio. Defaults to 'EUR'.
         """
-        self._as = self.__class__._read_portfolio(portfolio_file)
+        self._as = self.__class__._read_portfolio(assets_file)
         self._al = self.__class__._read_allocation(allocation_file)
         self._currency = currency
 

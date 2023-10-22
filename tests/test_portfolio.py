@@ -35,7 +35,7 @@ def test_portfolio_init(raw_csv_portfolio, raw_csv_allocation, mocker):
     allocation_portfolio_spy = mocker.spy(MockPortfolio, '_read_allocation')
 
     mock_portfolio = MockPortfolio(
-        portfolio_file=raw_csv_portfolio, allocation_file=raw_csv_allocation
+        assets_file=raw_csv_portfolio, allocation_file=raw_csv_allocation
     )
 
     assert read_portfolio_spy.call_count == 1
