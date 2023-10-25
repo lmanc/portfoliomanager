@@ -25,14 +25,16 @@ class DegiroPortfolio(Portfolio):
             DataFrame: The processed DataFrame.
         """
         try:
-            df.columns = pd.Index([
-                'Product',
-                'ISIN',
-                'Amount',
-                'Closing',
-                'Local Value',
-                'Current Value',
-            ])
+            df.columns = pd.Index(
+                [
+                    'Product',
+                    'ISIN',
+                    'Amount',
+                    'Closing',
+                    'Local Value',
+                    'Current Value',
+                ]
+            )
         except ValueError as e:
             print(e)
             raise ValueError(e) from None
