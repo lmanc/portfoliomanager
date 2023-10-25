@@ -52,4 +52,4 @@ pm.rebalance_no_sell()
 
 ## `assets.csv` and `allocation.csv` Required Format
 
-Asset file must have the second column filled with ISINs, which will then be used as the Index of the `Portfolio` object. Allocation file must have two columns with the ISINs and the desired percentages. Any subclass of `Portfolio` should be implemented accordingly. For examples of how `assets.csv` and `allocations.csv` should be formatted, see the examples in `tests/csv`.
+`assets_file` must have the second column filled with ISINs, which will then be used as the `Index` of the assets `DataFrame` inside the`Portfolio` object. `allocation_file` must have two columns with the ISINs and the desired percentages. Any subclass of `Portfolio` should be implemented accordingly. For examples of how they should be formatted, see the `assets.csv` and `allocations.csv` in `tests/csv`.
