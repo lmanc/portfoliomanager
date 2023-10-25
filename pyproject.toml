@@ -1,6 +1,6 @@
 [project]
-name = ""
-description = ""
+name = "Portfolio Manager"
+description = "A portfolio manager project that provides insights and rebalancing strategies for an investment portfolio. The project incorporates unit testing and follows a test-driven development approach."
 readme = "README.md"
 requires-python = ">=3.10"
 license = ""
@@ -83,3 +83,6 @@ skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+[tool.ruff.pydocstyle]
+convention = "google"
