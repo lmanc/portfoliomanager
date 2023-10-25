@@ -1,3 +1,5 @@
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 # Roadmap 🚀
 - Implement a mechanism using a public API to retrieve print names and daily closing values for assets.
 - Improve logging by replacing print statements in `except` blocks with appropriate logging functions.
