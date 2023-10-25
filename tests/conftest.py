@@ -52,7 +52,7 @@ class MockPortfolio(Portfolio):
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
-        pass
+        return pd.DataFrame()
 
 
 @pytest.fixture
