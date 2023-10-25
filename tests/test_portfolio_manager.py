@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
 from portfolio import Portfolio
@@ -23,7 +22,7 @@ from conftest import (
 
 @pytest.mark.parametrize(
     'read_pickles',
-    zip(rebalances_sell, summaries, portfolios_conv),
+    zip(rebalances_sell, summaries, portfolios_conv, strict=True),
     indirect=True,
 )
 def test_rebalance_sell(read_pickles, mocker):
@@ -43,7 +42,9 @@ def test_rebalance_sell(read_pickles, mocker):
     assert pm.rebalance_sell().equals(df_expected_from_pickle)
 
 
-@pytest.mark.parametrize('read_pickles', zip(summaries), indirect=True)
+@pytest.mark.parametrize(
+    'read_pickles', zip(summaries, strict=True), indirect=True
+)
 def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
     (summary_file,) = read_pickles
 
@@ -62,7 +63,7 @@ def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
 
 @pytest.mark.parametrize(
     'read_pickles',
-    zip(rebalances_no_sell, summaries_passing_no_sell),
+    zip(rebalances_no_sell, summaries_passing_no_sell, strict=True),
     indirect=True,
 )
 def test_rebalance_no_sell(read_pickles, mocker):

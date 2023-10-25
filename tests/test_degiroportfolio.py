@@ -1,33 +1,25 @@
 import sys
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
 from degiroportfolio import DegiroPortfolio
-from portfolio import Portfolio
 
 project_dir = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_dir))
 
 
 from conftest import (
-    allocations_csv,
-    allocations_idx,
-    allocations_plain,
-    currencies,
     portfolios_columns,
     portfolios_conv,
-    portfolios_csv,
-    portfolios_dropna,
-    portfolios_idx,
     portfolios_plain,
-    summaries,
 )
 
 
 @pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_plain, portfolios_columns), indirect=True
+    'read_pickles',
+    zip(portfolios_plain, portfolios_columns, strict=True),
+    indirect=True,
 )
 def test_replace_columns(read_pickles):
     df_working_from_pickle, df_expected_from_pickle = read_pickles
@@ -37,7 +29,9 @@ def test_replace_columns(read_pickles):
     )
 
 
-@pytest.mark.parametrize('read_pickles', zip(portfolios_plain), indirect=True)
+@pytest.mark.parametrize(
+    'read_pickles', zip(portfolios_plain, strict=True), indirect=True
+)
 def test_replace_columns_raise_ValueError(read_pickles):
     (df_working_from_pickle,) = read_pickles
     df_working_from_pickle.drop(
@@ -49,7 +43,9 @@ def test_replace_columns_raise_ValueError(read_pickles):
 
 
 @pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_columns, portfolios_conv), indirect=True
+    'read_pickles',
+    zip(portfolios_columns, portfolios_conv, strict=True),
+    indirect=True,
 )
 def test_convert_str_columns_to_float(read_pickles):
     df_working_from_pickle, df_expected_from_pickle = read_pickles
@@ -66,9 +62,9 @@ def test_convert_str_columns_to_float(read_pickles):
 
 
 @pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_columns[0:1]), indirect=True
+    'read_pickles', zip(portfolios_columns[0:1], strict=True), indirect=True
 )
-def test_convert_str_columns_to_float(read_pickles):
+def test_convert_str_columns_to_float_raise_ValueError(read_pickles):
     (df_working_from_pickle,) = read_pickles
     df_working_from_pickle = DegiroPortfolio._dropna_isin(
         df_working_from_pickle
@@ -82,7 +78,9 @@ def test_convert_str_columns_to_float(read_pickles):
 
 
 @pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_plain, portfolios_conv), indirect=True
+    'read_pickles',
+    zip(portfolios_plain, portfolios_conv, strict=True),
+    indirect=True,
 )
 def test_clean_portfolio(read_pickles, mocker):
     df_working_from_pickle, df_expected_from_pickle = read_pickles

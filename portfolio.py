@@ -185,7 +185,7 @@ class Portfolio:
 
         if not Portfolio._validate_allocation_percentage_sum(df):
             raise ValueError(
-                f'The total sum of percentages in the "Expected Percentage" column is not 100%'
+                'The total sum of percentages in the "Expected Percentage" column is not 100%'
             )
 
         df = Portfolio._set_index_isin(df)
