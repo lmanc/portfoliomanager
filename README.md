@@ -22,7 +22,7 @@ pf = DegiroPortfolio()
 pm = PortfolioManager(pf)
 ```
 
-`DegiroPortfolio` takes two optional keyword arguments: `assets_file` and `allocation_file`. By default, these are set to `assets.csv` and `allocation.csv`, respectively, which must be in the same directory as the project.
+`DegiroPortfolio()` takes two optional arguments: `assets_file` and `allocation_file`. By default, these are set to `assets.csv` and `allocation.csv`, respectively, which must be in the same directory as the project.
 
 ## Sell Rebalance
 
