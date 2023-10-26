@@ -1,9 +1,9 @@
 [project]
-name = "Portfolio Manager"
+name = "portfolio-manager"
 description = "A portfolio manager project that provides insights and rebalancing strategies for an investment portfolio. The project incorporates unit testing and follows a test-driven development approach."
 readme = "README.md"
 requires-python = ">=3.10"
-license = ""
+version = "0.1"
 authors = [
     { name = "Luca Mancusi", email = "luca.mancusi@protonmail.ch" },
     { name = "Moise Medici", email = "moise.medici@gmail.com" },
