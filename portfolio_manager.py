@@ -61,12 +61,12 @@ class PortfolioManager:
 
         if mask.any():
             error_message = (
-                "While performing a no-sell rebalance, you can't set an"
-                "Expected Percentage of 0% in your desired allocation for an"
-                "asset that you currently own. The following assets are"
+                "While performing a no-sell rebalance, you can't set an "
+                "Expected Percentage of 0% in your desired allocation for an "
+                "asset that you currently own. The following assets are "
                 "currently owned but their Expected Percentage is 0%:\n\n"
                 f"{df[mask][['Product', 'Current Value', 'Expected Percentage']]}"
-                "\n\nPlease adjust your target allocations and try again."
+                "\n\nPlease adjust your desired assets allocation and try again."
             )
 
             raise ValueError(error_message)
