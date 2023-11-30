@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-from portfolio_manager import Portfolio
+from portfolio import Portfolio
 
 csv_dir = Path(__file__).parent / 'csv'
 pickles_dir = Path(__file__).parent / 'pickles'

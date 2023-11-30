@@ -8,7 +8,7 @@ from conftest import (
     summaries_passing_no_sell,
 )
 from portfolio import Portfolio
-from portfolio_manager import PortfolioManager
+from portfoliomanager import PortfolioManager
 
 
 @pytest.mark.parametrize(
