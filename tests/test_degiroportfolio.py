@@ -1,19 +1,10 @@
-import sys
-from pathlib import Path
-
 import pytest
-
-from degiroportfolio import DegiroPortfolio
-
-project_dir = Path(__file__).resolve().parents[1]
-sys.path.append(str(project_dir))
-
-
 from conftest import (
     portfolios_columns,
     portfolios_conv,
     portfolios_plain,
 )
+from degiroportfolio import DegiroPortfolio
 
 
 @pytest.mark.parametrize(

@@ -1,5 +1,5 @@
 [project]
-name = "portfolio-manager"
+name = "portfoliomanager"
 description = "A portfolio manager project that provides insights and rebalancing strategies for an investment portfolio. The project incorporates unit testing and follows a test-driven development approach."
 readme = "README.md"
 requires-python = ">=3.10"

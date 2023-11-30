@@ -1,14 +1,11 @@
-import sys
 from pathlib import Path
-
-project_dir = Path(__file__).resolve().parents[1]
-sys.path.append(str(project_dir))
-
 
 import pandas as pd
 import pytest
+from portfolio_manager import Portfolio
 
-from portfolio import Portfolio
+csv_dir = Path(__file__).parent / 'csv'
+pickles_dir = Path(__file__).parent / 'pickles'
 
 currencies = ('EUR', 'GBP')
 portfolios_csv = ('assets_EUR.csv', 'assets_GBP.csv')
@@ -44,8 +41,8 @@ rebalances_no_sell = (
 class MockPortfolio(Portfolio):
     def __init__(
         self,
-        assets_file=project_dir / 'tests' / 'csv' / 'assets_EUR.csv',
-        allocation_file=project_dir / 'tests' / 'csv' / 'allocation_EUR.csv',
+        assets_file=csv_dir / 'assets_EUR.csv',
+        allocation_file=csv_dir / 'allocation_EUR.csv',
         currency='EUR',
     ):
         super().__init__(assets_file, allocation_file, currency)
@@ -57,17 +54,14 @@ class MockPortfolio(Portfolio):
 
 @pytest.fixture
 def raw_csv_portfolio(request):
-    return project_dir / 'tests' / 'csv' / request.param
+    return csv_dir / request.param
 
 
 @pytest.fixture
 def raw_csv_allocation(request):
-    return project_dir / 'tests' / 'csv' / request.param
+    return csv_dir / request.param
 
 
 @pytest.fixture
 def read_pickles(request):
-    return (
-        pd.read_pickle(project_dir / 'tests' / 'pickles' / path)
-        for path in request.param
-    )
+    return (pd.read_pickle(pickles_dir / path) for path in request.param)

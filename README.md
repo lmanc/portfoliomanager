@@ -6,7 +6,6 @@
 - Use Plotly Dash for data visualization 📊
 
 # 🛠️ Improvements
-- All imports need proper refactoring 💀
 - Consider if it's worth using abstract classes and methods, e.g., `Portfolio` should probably be an abstract class; similar consideration should be given to all the various methods that raise `NotImplementedError` 🤔
 - Set up proper GitHub Actions 🦑
 - Improve logging by replacing print statements in `except` blocks with appropriate logging functions 📝

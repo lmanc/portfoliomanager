@@ -1,15 +1,4 @@
-import sys
-from pathlib import Path
-
 import pytest
-
-from portfolio import Portfolio
-from portfolio_manager import PortfolioManager
-
-project_dir = Path(__file__).resolve().parents[1]
-sys.path.append(str(project_dir))
-
-
 from conftest import (
     MockPortfolio,
     portfolios_conv,
@@ -18,6 +7,8 @@ from conftest import (
     summaries,
     summaries_passing_no_sell,
 )
+from portfolio import Portfolio
+from portfolio_manager import PortfolioManager
 
 
 @pytest.mark.parametrize(

@@ -1,18 +1,10 @@
-import sys
-from pathlib import Path
-
 import pytest
-from conftest import MockPortfolio
-
-from portfolio import Portfolio
-
-project_dir = Path(__file__).resolve().parents[1]
-sys.path.append(str(project_dir))
-
 from conftest import (
+    MockPortfolio,
     allocations_csv,
     allocations_idx,
     allocations_plain,
+    csv_dir,
     currencies,
     portfolios_columns,
     portfolios_conv,
@@ -22,6 +14,7 @@ from conftest import (
     portfolios_plain,
     summaries,
 )
+from portfolio import Portfolio
 
 
 @pytest.mark.parametrize(
@@ -107,7 +100,7 @@ def test_read_file_allocation(read_pickles, raw_csv_allocation):
 
 def test_read_file_raise_FileNotFoundError():
     with pytest.raises(FileNotFoundError):
-        Portfolio._read_file(project_dir / 'tests' / 'csv' / 'missing.csv')
+        Portfolio._read_file(csv_dir / 'missing.csv')
 
 
 @pytest.mark.parametrize(
