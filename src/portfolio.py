@@ -6,7 +6,7 @@ class Portfolio:
     A class to represent a financial portfolio.
 
     Attributes:
-        _pf (DataFrame): A DataFrame containing portfolio data.
+        _as (DataFrame): A DataFrame containing assets data.
         _al (DataFrame): A DataFrame containing allocation data.
         _currency (str): The currency of the portfolio.
     """
