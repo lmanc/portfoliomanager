@@ -57,34 +57,56 @@ max-doc-length = 72
 
 [tool.ruff.lint]
 select = [
-    "E",    # pycodestyle errors
-    "W",    # pycodestyle warnings
-    "F",    # pyflakes
-    "I",    # isort
-    "C4",   # flake8-comprehensions
-    "B",    # flake8-bugbear
-    "UP",   # pyupgrade
-    "N",    # pep8-naming
-    "D",    # pydocstyle
-    "A",    # flake8-builtins
-    "EM",   # flake8-errmsg
-    "INP",  # flake8-no-pep420
-    "PT",   # flake8-pytest-style
-    "RET",  # flake8-return
-    "SIM",  # flake8-simplify
-    "PD",   # pandas-vet
-    "SLF",  # flake8-self
-    "PTH",  # flake8-use-pathlib
-    "FURB", # refurb
-    "PERF", # Perflint
-    "FLY",  # flynt
-    "RUF",  # Ruff-specific rules
+    "A",     # flake8-builtins
+    "ANN",   # flake8-annotations
+    "ARG",   # flake8-unused-arguments
+    "B",     # flake8-bugbear
+    "BLE",   # flake8-blind-except
+    "COM",   # flake8-commas
+    "C4",    # flake8-comprehensions
+    "C90",   # mccabe
+    "D",     # pydocstyle
+    "E",     # pycodestyle errors
+    "ERA",   # eradicate
+    "EM",    # flake8-errmsg
+    "F",     # pyflakes
+    "FBT",   # flake8-boolean-trap
+    "FLY",   # flynt
+    "FURB",  # refurb
+    "G",     # flake8-logging-format
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "INP",   # flake8-no-pep420
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PD",    # pandas-vet
+    "PERF",  # Perflint
+    "PIE",   # flake8-pie
+    "PL",    # Pylint
+    "PTH",   # flake8-use-pathlib
+    "PT",    # flake8-pytest-style
+    "RET",   # flake8-return
+    "RSE",   # flake8-raise
+    "RUF",   # Ruff-specific rules
+    "S",     # flake8-bandit
+    "SIM",   # flake8-simplify
+    "SLF",   # flake8-self
+    "TID",   # flake8-tidy-imports
+    "TRY",   # tryceratops
+    "T10",   # flake8-debugger
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
 ]
+
 ignore = [
     "E501", "W505", "PD901", #TODO
-    "W191",  # indentation contains tabs
-    "D100",  # missing docstring in public module
-    "D104",  # missing docstring in public package
+    "ANN101",  # missing-type-self
+    "ANN102",  # missing-type-cls
+    "ANN204",  # missing-return-type-special-method
+    "COM812",  # missing-trailing-comma
+    "D100",    # missing docstring in public module
+    "D104",    # missing docstring in public package
+    "W191",    # indentation contains tabs
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
@@ -93,9 +115,12 @@ unfixable = []
 
 [tool.ruff.extend-per-file-ignores]
 "tests/*" = [
-    "N802",   # invalid-function-name
+    "ANN",    # flake8-annotations
     "D",      # pydocstyle
     "INP001", # implicit-namespace-package
+    "N802",   # invalid-function-name
+    "S101",   # assert
+    "S301",   # suspicious-pickle-usage
     "SLF001", # private-member-access
 ]
 
