@@ -48,7 +48,7 @@ class MockPortfolio(Portfolio):
         super().__init__(assets_file, allocation_file, currency)
 
     @staticmethod
-    def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
+    def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:  # noqa: ARG004
         return pd.DataFrame()
 
 

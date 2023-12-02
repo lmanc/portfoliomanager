@@ -73,7 +73,7 @@ def test_convert_str_columns_to_float_raise_ValueError(read_pickles):
     zip(portfolios_plain, portfolios_conv, strict=True),
     indirect=True,
 )
-def test_clean_portfolio(read_pickles, mocker):
+def test_clean_portfolio(read_pickles):
     df_working_from_pickle, df_expected_from_pickle = read_pickles
 
     assert df_expected_from_pickle.equals(

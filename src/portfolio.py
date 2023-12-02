@@ -1,5 +1,7 @@
 import pandas as pd
 
+FULL_PERCENTAGE = 100
+
 
 class Portfolio:
     """A class to represent a financial portfolio.
@@ -152,7 +154,7 @@ class Portfolio:
         Returns:
             bool: True if the sum is 100, False otherwise.
         """
-        return df['Expected Percentage'].sum() == 100
+        return df['Expected Percentage'].sum() == FULL_PERCENTAGE
 
     @staticmethod
     def _read_allocation(allocation_file: str) -> pd.DataFrame:
