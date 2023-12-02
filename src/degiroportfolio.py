@@ -3,14 +3,11 @@ from portfolio import Portfolio
 
 
 class DegiroPortfolio(Portfolio):
-    """
-    A subclass of Portfolio that represents a Degiro portfolio.
-    """
+    """A subclass of Portfolio that represents a Degiro portfolio."""
 
     @staticmethod
     def _replace_columns(df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Replaces the column names in a DataFrame.
+        """Replaces the column names in a DataFrame.
 
         The columns are renamed to: 'Product', 'ISIN', 'Amount', 'Closing', 'Local Value', 'Current Value'.
 
@@ -24,26 +21,24 @@ class DegiroPortfolio(Portfolio):
             DataFrame: The processed DataFrame.
         """
         try:
-            df.columns = pd.Index(
-                [
-                    'Product',
-                    'ISIN',
-                    'Amount',
-                    'Closing',
-                    'Local Value',
-                    'Current Value',
-                ]
+            columns = (
+                'Product',
+                'ISIN',
+                'Amount',
+                'Closing',
+                'Local Value',
+                'Current Value',
             )
-        except ValueError as e:
-            print(e)
-            raise ValueError(e) from None
+            df.columns = pd.Index(columns)
+        except ValueError:
+            msg = f'Column mismatch: expected {len(columns)} columns {columns} but received {len(df.columns)}: {df.columns}.'
+            raise ValueError(msg) from None
 
         return df
 
     @staticmethod
     def _convert_str_columns_to_float(df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Converts the 'Current Value' and 'Closing' columns to float.
+        """Converts the 'Current Value' and 'Closing' columns to float.
 
         Args:
             df (DataFrame): The DataFrame to process.
@@ -62,16 +57,18 @@ class DegiroPortfolio(Portfolio):
                         .apply(lambda x: x.replace(',', '.'))
                         .astype('float')
                     )
-                except ValueError as e:
-                    print(e)
-                    raise ValueError(e) from None
+                except ValueError:
+                    msg = (
+                        f'Failed to convert column {col} to float. '
+                        'Check for non-numeric values.'
+                    )
+                    raise ValueError(msg) from None
 
         return df
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Cleans a portfolio DataFrame.
+        """Cleans a portfolio DataFrame.
 
         The cleaning process includes replacing column names, dropping NaN values from 'ISIN',
         setting 'ISIN' as the index, and converting 'Current Value' and 'Closing' to float.
@@ -85,6 +82,4 @@ class DegiroPortfolio(Portfolio):
         df = DegiroPortfolio._replace_columns(df)
         df = DegiroPortfolio._dropna_isin(df)
         df = DegiroPortfolio._set_index_isin(df)
-        df = DegiroPortfolio._convert_str_columns_to_float(df)
-
-        return df
+        return DegiroPortfolio._convert_str_columns_to_float(df)

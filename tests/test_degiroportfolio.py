@@ -25,11 +25,11 @@ def test_replace_columns(read_pickles):
 )
 def test_replace_columns_raise_ValueError(read_pickles):
     (df_working_from_pickle,) = read_pickles
-    df_working_from_pickle.drop(
-        df_working_from_pickle.columns[0], axis=1, inplace=True
+    df_working_from_pickle = df_working_from_pickle.drop(
+        df_working_from_pickle.columns[0], axis=1
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r'Column mismatch: .*'):
         DegiroPortfolio._replace_columns(df_working_from_pickle)
 
 
@@ -64,7 +64,7 @@ def test_convert_str_columns_to_float_raise_ValueError(read_pickles):
     index = df_working_from_pickle.index[0]
     df_working_from_pickle.loc[index, 'Closing'] = 'wrong'
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r'Failed to convert column .*'):
         DegiroPortfolio._convert_str_columns_to_float(df_working_from_pickle)
 
 

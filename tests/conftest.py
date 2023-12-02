@@ -52,16 +52,16 @@ class MockPortfolio(Portfolio):
         return pd.DataFrame()
 
 
-@pytest.fixture
+@pytest.fixture()
 def raw_csv_portfolio(request):
     return csv_dir / request.param
 
 
-@pytest.fixture
+@pytest.fixture()
 def raw_csv_allocation(request):
     return csv_dir / request.param
 
 
-@pytest.fixture
+@pytest.fixture()
 def read_pickles(request):
     return (pd.read_pickle(pickles_dir / path) for path in request.param)

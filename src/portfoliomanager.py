@@ -3,16 +3,14 @@ from portfolio import Portfolio
 
 
 class PortfolioManager:
-    """
-    A class to manage a financial portfolio.
+    """A class to manage a financial portfolio.
 
     Attributes:
         _portfolio (Portfolio): The portfolio to manage.
     """
 
     def __init__(self, portfolio: Portfolio):
-        """
-        Constructs all the necessary attributes for the portfolio manager object.
+        """Constructs all the necessary attributes for the portfolio manager object.
 
         Args:
             portfolio (Portfolio): The portfolio to manage.
@@ -20,8 +18,7 @@ class PortfolioManager:
         self._portfolio = portfolio
 
     def rebalance_sell(self) -> pd.DataFrame:
-        """
-        Calculates the required changes to rebalance the portfolio with selling allowed.
+        """Calculates the required changes to rebalance the portfolio with selling allowed.
 
         Returns:
             DataFrame: A DataFrame showing the current and expected values, percentages, and movements.
@@ -44,8 +41,7 @@ class PortfolioManager:
         ]
 
     def rebalance_no_sell(self) -> pd.DataFrame:
-        """
-        Calculates the required changes to rebalance the portfolio without selling.
+        """Calculates the required changes to rebalance the portfolio without selling.
 
         If an asset is owned but its expected percentage is 0, an error is raised.
 
@@ -59,7 +55,7 @@ class PortfolioManager:
         mask = (df['Expected Percentage'] == 0) & (df['Current Value'] != 0)
 
         if mask.any():
-            error_message = (
+            msg = (
                 "While performing a no-sell rebalance, you can't set an "
                 "Expected Percentage of 0% in your desired allocation for an "
                 "asset that you currently own. The following assets are "
@@ -68,7 +64,7 @@ class PortfolioManager:
                 "\n\nPlease adjust your desired assets allocation and try again."
             )
 
-            raise ValueError(error_message)
+            raise ValueError(msg)
 
         max_isin = (
             df['Current Percentage'] / df['Expected Percentage']

@@ -48,7 +48,9 @@ def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
     mock_portfolio = MockPortfolio()
     pm = PortfolioManager(mock_portfolio)
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError, match=r'While performing a no-sell rebalance, .*'
+    ):
         pm.rebalance_no_sell()
 
 

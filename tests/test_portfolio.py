@@ -18,7 +18,7 @@ from portfolio import Portfolio
 
 
 @pytest.mark.parametrize(
-    'raw_csv_portfolio, raw_csv_allocation',
+    ('raw_csv_portfolio', 'raw_csv_allocation'),
     zip(portfolios_csv, allocations_csv, strict=True),
     indirect=True,
 )
@@ -66,7 +66,7 @@ def test_total_value(read_pickles, mocker):
 def test_summary(read_pickles, mocker):
     portfolio, allocation, df_expected_from_pickle = read_pickles
 
-    portfolio.rename(index={portfolio.index[0]: 'US0003692039'}, inplace=True)
+    portfolio = portfolio.rename(index={portfolio.index[0]: 'US0003692039'})
 
     mocker.patch.object(Portfolio, '_read_portfolio', return_value=portfolio)
     mocker.patch.object(Portfolio, '_read_allocation', return_value=allocation)
@@ -77,7 +77,7 @@ def test_summary(read_pickles, mocker):
 
 
 @pytest.mark.parametrize(
-    'read_pickles, raw_csv_portfolio',
+    ('read_pickles', 'raw_csv_portfolio'),
     zip(zip(portfolios_plain, strict=True), portfolios_csv, strict=True),
     indirect=True,
 )
@@ -88,7 +88,7 @@ def test_read_file_portfolio(read_pickles, raw_csv_portfolio):
 
 
 @pytest.mark.parametrize(
-    'read_pickles, raw_csv_allocation',
+    ('read_pickles', 'raw_csv_allocation'),
     zip(zip(allocations_plain, strict=True), allocations_csv, strict=True),
     indirect=True,
 )
@@ -204,12 +204,15 @@ def test_read_allocation_raise_ValueError(raw_csv_allocation, mocker):
         Portfolio, '_validate_allocation_percentage_sum', return_value=False
     )
 
-    with pytest.raises(ValueError):
+    with pytest.raises(
+        ValueError,
+        match=r'The total sum of percentages in the "Expected Percentage" column is not 100%',
+    ):
         Portfolio._read_allocation(raw_csv_allocation)
 
 
 @pytest.mark.parametrize(
-    'read_pickles, raw_csv_allocation',
+    ('read_pickles', 'raw_csv_allocation'),
     zip(zip(allocations_idx, strict=True), allocations_csv, strict=True),
     indirect=True,
 )
