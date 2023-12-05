@@ -14,8 +14,7 @@
 The default usage is as follows:
 
 ```python
-from degiroportfolio import DegiroPortfolio
-from portfolio_manager import PortfolioManager
+from portfoliomanager import DegiroPortfolio, PortfolioManager
 
 pf = DegiroPortfolio()
 pm = PortfolioManager(pf)
@@ -28,8 +27,7 @@ pm = PortfolioManager(pf)
 To perform a sell rebalance, run:
 
 ```python
-from degiroportfolio import DegiroPortfolio
-from portfolio_manager import PortfolioManager
+from portfoliomanager import DegiroPortfolio, PortfolioManager
 
 pf = DegiroPortfolio()
 pm = PortfolioManager(pf)
@@ -42,8 +40,7 @@ pm.rebalance_sell()
 To perform a no-sell rebalance, run:
 
 ```python
-from degiroportfolio import DegiroPortfolio
-from portfolio_manager import PortfolioManager
+from portfoliomanager import DegiroPortfolio, PortfolioManager
 
 pf = DegiroPortfolio()
 pm = PortfolioManager(pf)
