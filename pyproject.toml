@@ -48,8 +48,7 @@ exclude = [
     "venv",
 ]
 
-# PEP8 all over the way
-line-length = 79 # Used by both linter and E501
+line-length = 99 # Used by both linter and E501
 indent-width = 4
 
 [tool.ruff.lint.pycodestyle]
@@ -99,7 +98,6 @@ select = [
 ]
 
 ignore = [
-    "E501", "W505", "PD901", #TODO
     "ANN101",  # missing-type-self
     "ANN102",  # missing-type-cls
     "ANN204",  # missing-return-type-special-method
@@ -119,6 +117,7 @@ unfixable = []
     "D",      # pydocstyle
     "INP001", # implicit-namespace-package
     "N802",   # invalid-function-name
+    "PD901",   # pandas-df-variable-name
     "S101",   # assert
     "S301",   # suspicious-pickle-usage
     "SLF001", # private-member-access

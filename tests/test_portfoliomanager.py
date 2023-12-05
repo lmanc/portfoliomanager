@@ -1,5 +1,8 @@
 import pytest
-from conftest import (
+
+from portfoliomanager.portfolio import Portfolio
+from portfoliomanager.portfoliomanager import PortfolioManager
+from tests.conftest import (
     MockPortfolio,
     portfolios_conv,
     rebalances_no_sell,
@@ -7,8 +10,6 @@ from conftest import (
     summaries,
     summaries_passing_no_sell,
 )
-from portfolio import Portfolio
-from portfoliomanager import PortfolioManager
 
 
 @pytest.mark.parametrize(
@@ -33,9 +34,7 @@ def test_rebalance_sell(read_pickles, mocker):
     assert pm.rebalance_sell().equals(df_expected_from_pickle)
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(summaries, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(summaries, strict=True), indirect=True)
 def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
     (summary_file,) = read_pickles
 
@@ -48,9 +47,7 @@ def test_rebalance_no_sell_raise_ValueError(read_pickles, mocker):
     mock_portfolio = MockPortfolio()
     pm = PortfolioManager(mock_portfolio)
 
-    with pytest.raises(
-        ValueError, match=r'While performing a no-sell rebalance, .*'
-    ):
+    with pytest.raises(ValueError, match=r'While performing a no-sell rebalance, .*'):
         pm.rebalance_no_sell()
 
 

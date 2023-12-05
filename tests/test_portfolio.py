@@ -1,5 +1,7 @@
 import pytest
-from conftest import (
+
+from portfoliomanager.portfolio import Portfolio
+from tests.conftest import (
     MockPortfolio,
     allocations_csv,
     allocations_idx,
@@ -14,7 +16,6 @@ from conftest import (
     portfolios_plain,
     summaries,
 )
-from portfolio import Portfolio
 
 
 @pytest.mark.parametrize(
@@ -41,21 +42,14 @@ def test_currency(currency):
     assert mock_portfolio.currency == currency
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_conv, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(portfolios_conv, strict=True), indirect=True)
 def test_total_value(read_pickles, mocker):
     (df_expected_from_pickle,) = read_pickles
-    mocker.patch.object(
-        Portfolio, '_read_portfolio', return_value=df_expected_from_pickle
-    )
+    mocker.patch.object(Portfolio, '_read_portfolio', return_value=df_expected_from_pickle)
 
     mock_portfolio = MockPortfolio()
 
-    assert (
-        mock_portfolio.total_value
-        == df_expected_from_pickle['Current Value'].sum()
-    )
+    assert mock_portfolio.total_value == df_expected_from_pickle['Current Value'].sum()
 
 
 @pytest.mark.parametrize(
@@ -103,9 +97,7 @@ def test_read_file_raise_FileNotFoundError():
         Portfolio._read_file(csv_dir / 'missing.csv')
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_plain, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(portfolios_plain, strict=True), indirect=True)
 def test_replace_columns_raise_NotImplementedError(read_pickles):
     (df_working_from_pickle,) = read_pickles
     with pytest.raises(NotImplementedError):
@@ -119,19 +111,13 @@ def test_replace_columns_raise_NotImplementedError(read_pickles):
 )
 def test_dropna_isin(read_pickles):
     df_expected_from_pickle, df_working_from_pickle = read_pickles
-    assert df_expected_from_pickle.equals(
-        Portfolio._dropna_isin(df_working_from_pickle)
-    )
+    assert df_expected_from_pickle.equals(Portfolio._dropna_isin(df_working_from_pickle))
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_dropna, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(portfolios_dropna, strict=True), indirect=True)
 def test_dropna_isin_untouched(read_pickles):
     (df_expected_from_pickle,) = read_pickles
-    assert df_expected_from_pickle.equals(
-        Portfolio._dropna_isin(df_expected_from_pickle)
-    )
+    assert df_expected_from_pickle.equals(Portfolio._dropna_isin(df_expected_from_pickle))
 
 
 @pytest.mark.parametrize(
@@ -141,14 +127,10 @@ def test_dropna_isin_untouched(read_pickles):
 )
 def test_set_index_isin(read_pickles):
     df_expected_from_pickle, df_working_from_pickle = read_pickles
-    assert df_expected_from_pickle.equals(
-        Portfolio._set_index_isin(df_working_from_pickle)
-    )
+    assert df_expected_from_pickle.equals(Portfolio._set_index_isin(df_working_from_pickle))
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_idx, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(portfolios_idx, strict=True), indirect=True)
 def test_convert_str_columns_to_float_raise_NotImplementedError(
     read_pickles,
 ):
@@ -157,9 +139,7 @@ def test_convert_str_columns_to_float_raise_NotImplementedError(
         Portfolio._convert_str_columns_to_float(df_working_from_pickle)
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(portfolios_plain, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(portfolios_plain, strict=True), indirect=True)
 def test_clean_portfolio_raise_NotImplementedError(read_pickles):
     (df_working_from_pickle,) = read_pickles
     with pytest.raises(NotImplementedError):
@@ -177,32 +157,22 @@ def test_read_portfolio(raw_csv_portfolio, mocker):
     assert spy_clean_portfolio.call_count == 1
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(allocations_plain, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(allocations_plain, strict=True), indirect=True)
 def test_validate_allocation_percentage_sum(read_pickles):
     (df_expected_from_pickle,) = read_pickles
-    assert Portfolio._validate_allocation_percentage_sum(
-        df_expected_from_pickle
-    )
+    assert Portfolio._validate_allocation_percentage_sum(df_expected_from_pickle)
 
 
-@pytest.mark.parametrize(
-    'read_pickles', zip(allocations_plain, strict=True), indirect=True
-)
+@pytest.mark.parametrize('read_pickles', zip(allocations_plain, strict=True), indirect=True)
 def test_validate_allocation_percentage_sum_wrong(read_pickles):
     (df_expected_from_pickle,) = read_pickles
     df_expected_from_pickle['Expected Percentage'] = 0
-    assert not Portfolio._validate_allocation_percentage_sum(
-        df_expected_from_pickle
-    )
+    assert not Portfolio._validate_allocation_percentage_sum(df_expected_from_pickle)
 
 
 @pytest.mark.parametrize('raw_csv_allocation', allocations_csv, indirect=True)
 def test_read_allocation_raise_ValueError(raw_csv_allocation, mocker):
-    mocker.patch.object(
-        Portfolio, '_validate_allocation_percentage_sum', return_value=False
-    )
+    mocker.patch.object(Portfolio, '_validate_allocation_percentage_sum', return_value=False)
 
     with pytest.raises(
         ValueError,
@@ -218,6 +188,4 @@ def test_read_allocation_raise_ValueError(raw_csv_allocation, mocker):
 )
 def test_read_allocation(read_pickles, raw_csv_allocation):
     (df_expected_from_pickle,) = read_pickles
-    assert df_expected_from_pickle.equals(
-        Portfolio._read_allocation(raw_csv_allocation)
-    )
+    assert df_expected_from_pickle.equals(Portfolio._read_allocation(raw_csv_allocation))

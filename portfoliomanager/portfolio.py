@@ -18,12 +18,18 @@ class Portfolio:
         allocation_file: str = 'allocation.csv',
         currency: str = 'EUR',
     ):
-        """Constructs all the necessary attributes for the portfolio object.
+        """__init__ method.
+
+        Constructs all the necessary attributes for the portfolio
+        object.
 
         Args:
-            assets_file (str): The file name of the assets csv. Defaults to 'assets.csv'.
-            allocation_file (str): The file name of the allocation csv. Defaults to 'allocation.csv'.
-            currency (str): The currency of the portfolio. Defaults to 'EUR'.
+            assets_file (str): The file name of the assets csv.
+                Defaults to 'assets.csv'.
+            allocation_file (str): The file name of the allocation csv.
+                Defaults to 'allocation.csv'.
+            currency (str): The currency of the portfolio.
+                Defaults to 'EUR'.
         """
         self._as = self.__class__._read_portfolio(assets_file)  # noqa: SLF001
         self._al = self.__class__._read_allocation(allocation_file)  # noqa: SLF001
@@ -43,16 +49,17 @@ class Portfolio:
     def summary(self) -> pd.DataFrame:
         """Generates and returns a summary of the portfolio.
 
-        The summary includes the product, current value, current percentage, and expected percentage.
+        The summary includes the product, current value, current
+        percentage, and expected percentage.
         """
-        df = self._as.drop(['Amount', 'Closing', 'Local Value'], axis=1)
-        df = df.merge(self._al, how='outer', left_index=True, right_index=True)
-        df = df.fillna({'Current Value': 0, 'Expected Percentage': 0})
-        df['Current Percentage'] = (
-            df['Current Value'] / self.total_value * 100
-        ).apply(lambda x: round(x, 2))
+        summary = self._as.drop(['Amount', 'Closing', 'Local Value'], axis=1)
+        summary = summary.merge(self._al, how='outer', left_index=True, right_index=True)
+        summary = summary.fillna({'Current Value': 0, 'Expected Percentage': 0})
+        summary['Current Percentage'] = (summary['Current Value'] / self.total_value * 100).apply(
+            lambda x: round(x, 2)
+        )
 
-        return df[
+        return summary[
             [
                 'Product',
                 'Current Value',
@@ -82,10 +89,14 @@ class Portfolio:
 
     @staticmethod
     def _replace_columns(df: pd.DataFrame) -> pd.DataFrame:
-        """Placeholder for a method that replaces column names in a DataFrame.
+        """Method to be implemented.
+
+        Placeholder for a method that replaces column names in a
+        DataFrame.
 
         Raises:
-            NotImplementedError: This method needs to be implemented in a subclass.
+            NotImplementedError: This method needs to be implemented
+                in a subclass.
         """
         raise NotImplementedError
 
@@ -115,19 +126,26 @@ class Portfolio:
 
     @staticmethod
     def _convert_str_columns_to_float(df: pd.DataFrame) -> pd.DataFrame:
-        """Placeholder for a method that converts string columns to float in a DataFrame.
+        """Method to be implemented.
+
+        Placeholder for a method that converts string columns to float
+        in a DataFrame.
 
         Raises:
-            NotImplementedError: This method needs to be implemented in a subclass.
+            NotImplementedError: This method needs to be implemented
+                in a subclass.
         """
         raise NotImplementedError
 
     @staticmethod
     def _clean_portfolio(df: pd.DataFrame) -> pd.DataFrame:
-        """Placeholder for a method that cleans a portfolio DataFrame.
+        """Method to be implemented.
+
+        Placeholder for a method that cleans a portfolio DataFrame.
 
         Raises:
-            NotImplementedError: This method needs to be implemented in a subclass.
+            NotImplementedError: This method needs to be implemented
+                in a subclass.
         """
         raise NotImplementedError
 
@@ -141,38 +159,41 @@ class Portfolio:
         Returns:
             DataFrame: The cleaned portfolio DataFrame.
         """
-        df = Portfolio._read_file(portfolio_file)
-        return cls._clean_portfolio(df)
+        return cls._clean_portfolio(Portfolio._read_file(portfolio_file))
 
     @staticmethod
-    def _validate_allocation_percentage_sum(df: pd.DataFrame) -> bool:
-        """Validates that the sum of the 'Expected Percentage' column in a DataFrame is 100.
+    def _validate_allocation_percentage_sum(allocation: pd.DataFrame) -> bool:
+        """Validate 'Expected Percentage'.
+
+        Validates that the sum of the 'Expected Percentage' column in a
+        DataFrame is 100.
 
         Args:
-            df (DataFrame): The DataFrame to validate.
+            allocation (DataFrame): The DataFrame to validate.
 
         Returns:
             bool: True if the sum is 100, False otherwise.
         """
-        return df['Expected Percentage'].sum() == FULL_PERCENTAGE
+        return allocation['Expected Percentage'].sum() == FULL_PERCENTAGE
 
     @staticmethod
     def _read_allocation(allocation_file: str) -> pd.DataFrame:
-        """Reads an allocation file and validates the resulting DataFrame.
+        """Reads allocation file and validates the resulting DataFrame.
 
         Args:
             allocation_file (str): The file name of the allocation csv.
 
         Raises:
-            ValueError: If the sum of the 'Expected Percentage' column is not 100.
+            ValueError: If the sum of the 'Expected Percentage'
+                column is not 100.
 
         Returns:
             DataFrame: The validated allocation DataFrame.
         """
-        df = Portfolio._read_file(allocation_file)
+        allocation = Portfolio._read_file(allocation_file)
 
-        if not Portfolio._validate_allocation_percentage_sum(df):
+        if not Portfolio._validate_allocation_percentage_sum(allocation):
             msg = 'The total sum of percentages in the "Expected Percentage" column is not 100%'
             raise ValueError(msg)
 
-        return Portfolio._set_index_isin(df)
+        return Portfolio._set_index_isin(allocation)
