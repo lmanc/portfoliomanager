@@ -117,7 +117,7 @@ unfixable = []
     "D",      # pydocstyle
     "INP001", # implicit-namespace-package
     "N802",   # invalid-function-name
-    "PD901",   # pandas-df-variable-name
+    "PD901",  # pandas-df-variable-name
     "S101",   # assert
     "S301",   # suspicious-pickle-usage
     "SLF001", # private-member-access
